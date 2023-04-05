@@ -106,7 +106,19 @@ def makeheatmap(filename, country, indicators, c):
         "Nitrous oxide emissions (thousand metric tons of CO2 equivalent)":
             "N20 Emissions",
             "Energy use (kg of oil equivalent per capita)":
-                "Energy Use"
+                "Energy Use",
+                "Agricultural land (% of land area)":
+                    "Agricultural land \n(% of land area)",
+                "Electric power consumption (kWh per capita)":
+                    "Electric power consumption \n(kWh per capita)",
+                    "Methane emissions (kt of CO2 equivalent)":
+                        "Methane emissions \n(kt of CO2 equivalent)",
+                "Total greenhouse gas emissions (kt of CO2 equivalent)":
+                    "Total greenhouse emissions \n(kt of CO2 equivalent)",
+                "Arable land (% of land area)":
+                    "Arable land \n(% of land area)",
+                    "Forest area (% of land area)":
+                        "Forest area \n(% of land area)"
             }, inplace=True)
     # plotting the heatmap
     plt.figure(figsize=(6, 4))
@@ -115,8 +127,8 @@ def makeheatmap(filename, country, indicators, c):
     # setting a title and saving the figure
     plt.title(country,  fontweight='bold', fontsize='x-large',
               fontname="Times New Roman")
-    plt.savefig(country+"'s Heatmap"+".png", dpi=350,
-                bbox_inches='tight', pad_inches=.5)
+    plt.savefig(country+"'s Heatmap"+".png", dpi=450,
+                bbox_inches='tight')
 
     return
 
@@ -133,8 +145,13 @@ c, d = read_df("API_EN.ATM.NOXE.KT.CE_DS2_en_csv_v2_4902772.csv", cntrs, yrs)
 df_n20emissions_1, df_n20emissions_2 = c, d
 e, f = read_df("API_AG.LND.ARBL.ZS_DS2_en_csv_v2_5346580.csv", cntrs, yrs)
 df_arableland_1, df_arableland_2 = e, f
-g, h = read_df("API_AG.LND.FRST.ZS_DS2_en_csv_v2_5348845.csv", cntrs, yrs)
+g, h = read_df("API_AG.LND.AGRI.ZS_DS2_en_csv_v2_5359417.csv", cntrs, yrs)
 df_agricultularland_1, df_agriculturalland_2 = g, h
+i, j = read_df("API_AG.LND.FRST.ZS_DS2_en_csv_v2_5348845.csv", cntrs, yrs)
+df_forestarea_1, df_forestarea_2 = i, j
+k, l = read_df("API_EN.ATM.METH.KT.CE_DS2_en_csv_v2_4903685.csv", cntrs, yrs)
+df_methaneemission_1, df_methaneemission_2 = k, l
+
 
 # creating some cool colormaps for the bar plots
 c1 = cm.viridis(np.linspace(.1, .9, 6)[::-1])
@@ -149,6 +166,10 @@ plot_df(df_co2emissions_1, 'bar', 'Carbon Dioxide emissions(kt)', c2)
 plot_df(df_n20emissions_1, 'bar',
         'Nitrous Oxide emissions(thousand metric tons of CO2 equivalent)', c1)
 plot_df(df_agriculturalland_2, 'line', 'Agricultural land(% of land area)', c3)
+plot_df(df_forestarea_2, 'line', 'Forest area(% of land area)', c4)
+plot_df(df_arableland_2, 'line', 'Arable land(% of land area)', c4)
+plot_df(df_methaneemission_2, 'line', 'Methane Emission', c3)
+
 
 # supressing scientific notation to use the statistical tools
 pd.set_option('display.float_format', lambda x: f'{x:,.2f}')
@@ -166,16 +187,19 @@ had the most relative increase in emissions in that 25 year time period.
 
 # choosing the indicators to make heatmaps
 indicators = [
-    "Urban population", "Arable land (% of land area)",
+    "Arable land (% of land area)",
     "Forest area (% of land area)",
+    "Agricultural land (% of land area)",
     "Nitrous oxide emissions (thousand metric tons of CO2 equivalent)",
     "CO2 emissions (kt)",
-    "Energy use (kg of oil equivalent per capita)"]
+    "Total greenhouse gas emissions (kt of CO2 equivalent)",
+    "Methane emissions (kt of CO2 equivalent)"
+    ]
 
 # creating some heatmaps to compare indicators of
 # countries, explore it's correlations(or lack of)
 makeheatmap("API_19_DS2_en_csv_v2_5346672.csv", "India", indicators, cm.winter)
-makeheatmap("API_19_DS2_en_csv_v2_5346672.csv", "China", indicators, cm.jet)
-makeheatmap("API_19_DS2_en_csv_v2_5346672.csv", "United Kingdom",
-            indicators, cm.cool)
+makeheatmap("API_19_DS2_en_csv_v2_5346672.csv", "China", indicators, cm.cool)
+makeheatmap("API_19_DS2_en_csv_v2_5346672.csv", "Japan",
+            indicators, cm.jet)
 makeheatmap("API_19_DS2_en_csv_v2_5346672.csv", "Brazil", indicators, cm.bone)
