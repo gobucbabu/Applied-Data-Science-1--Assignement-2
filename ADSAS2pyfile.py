@@ -67,19 +67,19 @@ def plot_df(df, knd, title, color):
     """
     # using conditional statements for different kinds for better customization
     if knd == "line":
-        ax = df.plot(kind=knd, figsize=(9, 5), rot=20, color=color)
+        ax = df.plot(kind=knd, figsize=(7, 5), rot=20, color=color)
         ax.legend(loc='best', fontsize=10)
         ax.set_title(title, fontweight='bold', fontsize='x-large',
                      fontname="Times New Roman")
         ax.set_xlabel("Years", fontweight='bold')
         ax.grid(axis='x', alpha=.85, linewidth=.75)
-        plt.savefig(title+".png", dpi=350)
+        plt.savefig(title+".png", dpi=600)
     else:
-        ax = df.plot(kind=knd, figsize=(10, 5), rot=20, color=color)
+        ax = df.plot(kind=knd, figsize=(6.5, 5), rot=20, color=color)
         ax.legend(loc='best', fontsize=10)
         ax.set_title(title, fontweight='bold', fontsize='x-large',
                      fontname="Times New Roman")
-        plt.savefig(title+".png", dpi=350)
+        plt.savefig(title+".png", dpi=600, bbox_inches='tight')
 
     return
 
@@ -102,14 +102,21 @@ def makeheatmap(filename, country, indicators, c):
     df1 = df0.loc[country].fillna(0).T
     # slicing the dataframe to have only the years with nonzero data
     df = df1.loc["1970":"2015", indicators]
+    df.rename(columns={
+        "Nitrous oxide emissions (thousand metric tons of CO2 equivalent)":
+            "N20 Emissions",
+            "Energy use (kg of oil equivalent per capita)":
+                "Energy Use"
+            }, inplace=True)
     # plotting the heatmap
-    plt.figure(figsize=(12, 8))
+    plt.figure(figsize=(6, 4))
     sns.heatmap(df.corr(), cmap=c, annot=True)
-    plt.xticks(rotation=25)
+    plt.xticks(rotation=90)
     # setting a title and saving the figure
     plt.title(country,  fontweight='bold', fontsize='x-large',
               fontname="Times New Roman")
-    plt.savefig(country+"'s Heatmap"+".png", dpi=350)
+    plt.savefig(country+"'s Heatmap"+".png", dpi=350,
+                bbox_inches='tight', pad_inches=.5)
 
     return
 
